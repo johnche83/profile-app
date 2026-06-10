@@ -254,7 +254,7 @@ Sten interpretation: 1~3=very low, 4=low, 5~6=average, 7=high, 8~10=very high. M
       },
       body: JSON.stringify({
         model: "claude-sonnet-4-5",
-        max_tokens: 4000,
+        max_tokens: 6000,
         messages: [{ role: "user", content: isKo ? promptKo : promptEn }]
       })
     });
