@@ -24,7 +24,7 @@ const LANG = {
     extractedHint: "추출 결과가 정확한지 확인 후 분석하세요. 수정이 필요하면 직접 입력 탭으로 전환하세요.",
     selectFile: "파일 선택", prevBtn: "← 이전", analyzeBtn: "분석 시작 →",
     editBtn: "← 입력 수정", pdfBtn: "상세 PDF 리포트 열기 ↗",
-    pdfNote: "PDF 창에서 인쇄(Ctrl+P) → PDF로 저장 선택",
+    pdfNote: "PDF 미리보기에서 저장 버튼 클릭 → 인쇄 대화상자에서 PDF로 저장",
     csMin: "CS 테마를 최소 5개 선택해주세요.",
     analyzingMsg: "두 진단을 교차 분석하는 중...", extractingMsg: "파일에서 점수를 추출하는 중...",
     noPdfAlert: "PDF 데이터가 없습니다. 다시 분석해주세요.",
@@ -62,7 +62,7 @@ const LANG = {
     extractedHint: "Verify the extracted results before analyzing. If corrections are needed, switch to the manual input tab.",
     selectFile: "Select File", prevBtn: "← Back", analyzeBtn: "Run Analysis →",
     editBtn: "← Edit Input", pdfBtn: "Open Detailed PDF Report ↗",
-    pdfNote: "In the PDF window, Print (Ctrl+P) → Save as PDF",
+    pdfNote: "Click Save in the PDF preview → Save as PDF in the print dialog",
     csMin: "Please select at least 5 CS themes.",
     analyzingMsg: "Cross-analyzing both diagnostics...", extractingMsg: "Extracting scores from files...",
     noPdfAlert: "No PDF data available. Please run analysis again.",
@@ -192,6 +192,7 @@ const substen = {W1:5.5,W2:5.5,W3:5.5,E1:5.5,E2:5.5,E3:5.5,A1:5.5,A2:5.5,A3:5.5,
 let files = {cs:null, f5:null};
 let lastAnalysis = null;
 let lastPdfHtml = null;
+let lastPayload = null;
 let currentTab = "manual";
 
 const API_BASE = "";
@@ -406,15 +407,8 @@ async function runAnalysis() {
     const data = await r.json();
     if(!data.ok) throw new Error(data.error || t("analysisApiErr"));
     lastAnalysis = data.result;
+    lastPayload = payload;
     renderHighlight(data.result, payload, family);
-
-    const pr = await fetch(API_BASE + "/api/generate-pdf", {
-      method:"POST", headers:{"Content-Type":"application/json"},
-      body: JSON.stringify({...payload, analysis: data.result})
-    });
-    const pd = await pr.json();
-    if(pd.ok) lastPdfHtml = pd.html;
-
     goPage(4);
   } catch(e) {
     document.getElementById("err2").textContent = t("analysisErr") + e.message;
@@ -498,14 +492,88 @@ function renderHighlight(r, payload, family) {
 </div>`;
 }
 
-/* ── PDF 열기 ── */
-function openPdf() {
+/* ── PDF 열기 (오버레이 방식 — Safari 백지 버그 우회) ── */
+async function openPdf() {
   saveSession();
-  if(!lastPdfHtml) { alert(t("noPdfAlert")); return; }
-  const blob = new Blob([lastPdfHtml], { type: "text/html; charset=utf-8" });
-  const url = URL.createObjectURL(blob);
-  window.open(url, "_blank");
-  setTimeout(() => URL.revokeObjectURL(url), 120000);
+  if (!lastAnalysis || !lastPayload) { alert(t("noPdfAlert")); return; }
+
+  showLoading(currentLang === "ko" ? "PDF 준비 중..." : "Preparing PDF...");
+  try {
+    const pr = await fetch(API_BASE + "/api/generate-pdf", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...lastPayload, analysis: lastAnalysis, lang: currentLang })
+    });
+    const pd = await pr.json();
+    if (pd.ok) lastPdfHtml = pd.html;
+  } catch(e) { /* 캐시된 버전 사용 */ }
+  finally { hideLoading(); }
+
+  if (!lastPdfHtml) { alert(t("noPdfAlert")); return; }
+
+  closePdfOverlay();
+
+  const parser = new DOMParser();
+  const pdfDoc = parser.parseFromString(lastPdfHtml, "text/html");
+  const pdfStyle = pdfDoc.querySelector("style")?.textContent || "";
+  const wrapEl = pdfDoc.querySelector(".wrap");
+  const pdfContent = wrapEl ? wrapEl.innerHTML : pdfDoc.body.innerHTML;
+
+  const styleEl = document.createElement("style");
+  styleEl.id = "pdf-overlay-style";
+  styleEl.textContent = `
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
+    #pdf-overlay{position:fixed;inset:0;z-index:9000;background:#525659;display:flex;flex-direction:column;overflow:hidden}
+    #pdf-overlay-bar{background:#323639;padding:10px 20px;display:flex;align-items:center;gap:10px;flex-shrink:0}
+    #pdf-overlay-scroll{flex:1;overflow-y:auto;padding:20px}
+    #pdf-overlay-body{max-width:800px;margin:0 auto;background:#fff;border-radius:6px;padding:28px;
+      font-family:'Noto Sans KR',sans-serif;font-size:10pt;line-height:1.65;color:#222}
+    #pdf-overlay-body .no-print-btn{display:none!important}
+    #pdf-overlay-body h2{font-size:14pt;font-weight:900;border-bottom:2px solid #1B2733;padding-bottom:5px;margin:20px 0 12px}
+    #pdf-overlay-body h3{font-size:10.5pt;font-weight:700;margin:12px 0 5px}
+    #pdf-overlay-body .callout{background:#1B2733;color:#fff;border-radius:8px;padding:12px 16px;margin:10px 0}
+    #pdf-overlay-body .callout b{color:#9FE1CB}
+    #pdf-overlay-body table{width:100%;border-collapse:collapse}
+    #pdf-overlay-body .tbl td,#pdf-overlay-body .tbl th{padding:6px 8px;font-size:9pt;border-bottom:1px solid #E8ECF0;vertical-align:top}
+    #pdf-overlay-body .tbl th{font-weight:700;background:#F5F7FA;text-align:left}
+    #pdf-overlay-body .box{border:1px solid #E0E5EA;border-radius:6px;padding:10px 13px;margin:7px 0}
+    #pdf-overlay-body .sig-row{display:grid;grid-template-columns:130px 1fr;gap:10px;padding:7px 0;border-bottom:1px solid #EEF0F3;font-size:9.5pt}
+    #pdf-overlay-body .q{background:#F5F7FA;border-left:3px solid #1B2733;padding:7px 11px;margin-bottom:6px;font-size:9pt}
+    #pdf-overlay-body .tag{display:inline-block;border-radius:10px;padding:2px 9px;font-size:8pt;font-weight:700;color:#fff;margin-right:4px}
+    @media print{
+      #pdf-overlay-bar{display:none!important}
+      body>*:not(#pdf-overlay){display:none!important}
+      #pdf-overlay{position:static!important;overflow:visible!important;background:white!important}
+      #pdf-overlay-scroll{overflow:visible!important;padding:0!important}
+      #pdf-overlay-body{border-radius:0!important;box-shadow:none!important}
+      @page{size:A4;margin:15mm 14mm 18mm}
+      .page-break{page-break-before:always}
+    }
+  `;
+  document.head.appendChild(styleEl);
+
+  const btnLabel = currentLang === "ko" ? "📄 PDF로 저장 (인쇄 → PDF)" : "📄 Save as PDF (Print → PDF)";
+  const closeLabel = currentLang === "ko" ? "✕ 닫기" : "✕ Close";
+  const overlay = document.createElement("div");
+  overlay.id = "pdf-overlay";
+  overlay.innerHTML = `
+    <div id="pdf-overlay-bar">
+      <button onclick="printPdf()" style="padding:8px 20px;background:#3E8E6E;color:#fff;border:none;border-radius:6px;font-size:13px;cursor:pointer;font-family:inherit">${btnLabel}</button>
+      <button onclick="closePdfOverlay()" style="padding:8px 16px;background:#555;color:#fff;border:none;border-radius:6px;font-size:13px;cursor:pointer;font-family:inherit">${closeLabel}</button>
+    </div>
+    <div id="pdf-overlay-scroll">
+      <div id="pdf-overlay-body">${pdfContent}</div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+}
+
+function printPdf() {
+  document.fonts.ready.then(() => window.print());
+}
+
+function closePdfOverlay() {
+  document.getElementById("pdf-overlay")?.remove();
+  document.getElementById("pdf-overlay-style")?.remove();
 }
 
 /* ── 로딩 ── */
