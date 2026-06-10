@@ -374,7 +374,7 @@ function renderHighlight(r, payload, family) {
 }
 
 /* ── PDF 열기 ── */
-function openPdf() {
+function openPdf() { saveSession();
   if(!lastPdfHtml) { alert("PDF 데이터가 없습니다. 다시 분석해주세요."); return; }
   const w = window.open("", "_blank");
   w.document.write(lastPdfHtml);
@@ -474,7 +474,29 @@ function buildF5Sliders() {
   });
 }
 
-buildThemeGrid();
+restoreSession(); buildThemeGrid();
 buildF5Sliders();
 updateCS();
 renderFamily();
+
+/* ── 세션 복원 ── */
+function saveSession() {
+  sessionStorage.setItem("lastAnalysis", JSON.stringify(lastAnalysis));
+  sessionStorage.setItem("lastPdfHtml", lastPdfHtml || "");
+  sessionStorage.setItem("payload", JSON.stringify({
+    name: document.getElementById("p_name")?.value || "",
+    role: document.getElementById("p_role")?.value || ""
+  }));
+}
+function restoreSession() {
+  const a = sessionStorage.getItem("lastAnalysis");
+  const h = sessionStorage.getItem("lastPdfHtml");
+  if(a && h) {
+    lastAnalysis = JSON.parse(a);
+    lastPdfHtml = h;
+    const p = JSON.parse(sessionStorage.getItem("payload") || "{}");
+    const family = detectFamily();
+    renderHighlight(lastAnalysis, p, family);
+    goPage(4);
+  }
+}
