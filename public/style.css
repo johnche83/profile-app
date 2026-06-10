@@ -6,11 +6,14 @@ input, select, button, textarea { font-family: inherit; font-size: 14px; }
 /* ── Header ── */
 header { background: #fff; border-bottom: 1px solid #E3E7E0; position: sticky; top: 0; z-index: 100; }
 .header-inner { max-width: 860px; margin: 0 auto; padding: 0 20px; height: 52px; display: flex; align-items: center; justify-content: space-between; }
-.logo { font-size: 15px; font-weight: 700; color: #1B2733; }
+.logo-btn { font-size: 15px; font-weight: 700; color: #1B2733; background: none; border: none; cursor: pointer; padding: 0; font-family: inherit; }
+.logo-btn:hover { color: #3E8E6E; }
 .prog-wrap { display: flex; align-items: center; gap: 6px; }
 .prog-step { font-size: 12px; color: #9AA09A; font-weight: 500; }
 .prog-step.active { color: #1B2733; }
 .prog-sep { color: #C5CAC0; font-size: 11px; }
+.lang-btn { font-size: 12px; font-weight: 600; color: #3E8E6E; background: none; border: 1px solid #3E8E6E; border-radius: 14px; padding: 4px 12px; cursor: pointer; transition: background .15s, color .15s; }
+.lang-btn:hover { background: #3E8E6E; color: #fff; }
 
 /* ── Pages ── */
 .page { display: none; }

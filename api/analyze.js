@@ -9,7 +9,7 @@ export default async function handler(req, res) {
   if (req.method === "OPTIONS") return res.status(200).end();
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
-  const { name, role, purpose, top10, sten, substen, family } = req.body;
+  const { name, role, purpose, top10, sten, substen, family, lang = "ko" } = req.body;
 
   if (!top10 || top10.length < 5) {
     return res.status(400).json({ error: "CS 테마가 부족합니다 (최소 5개)" });
@@ -52,7 +52,9 @@ export default async function handler(req, res) {
     .map(([k,v]) => `${k}:${v}`)
     .join(" ") : "";
 
-  const prompt = `당신은 CliftonStrengths와 Facet5 인증 수퍼바이저입니다.
+  const isKo = lang !== "en";
+  const prompt = isKo
+    ? `당신은 CliftonStrengths와 Facet5 인증 수퍼바이저입니다.
 대상자: ${name}${role ? " / "+role : ""} / 목적: ${purpose}
 CS Top${top10.length}(순서): ${csStr}
 CS 영역: 실행력${cnt.executing} 영향력${cnt.influencing} 대인관계${cnt.relationship} 전략적사고${cnt.strategic}
@@ -79,6 +81,35 @@ ${subfStr ? "하위요인: "+subfStr : ""}
     "탐색 질문 1 (30자 이내)",
     "탐색 질문 2 (30자 이내)",
     "탐색 질문 3 (30자 이내)"
+  ]
+}`
+    : `You are a certified CliftonStrengths and Facet5 supervisor.
+Subject: ${name}${role ? " / "+role : ""} / Purpose: ${purpose}
+CS Top${top10.length} (in order): ${csStr}
+CS Domains: Executing ${cnt.executing} Influencing ${cnt.influencing} Relationship ${cnt.relationship} Strategic Thinking ${cnt.strategic}
+Facet5: Will ${sten.W} Energy ${sten.E} Affection ${sten.A} Control ${sten.C} Emotionality ${sten.Em} / Family: ${family}
+${subfStr ? "Sub-factors: "+subfStr : ""}
+
+Return ONLY the JSON below. No markdown backticks, no preamble, no postscript. In English.
+{
+  "tagline": "Core profile in one phrase (under 8 words, noun-based)",
+  "summary": "2 sentences describing the core operating mode across both assessments (under 80 words)",
+  "dominant_domain": "dominant domain name",
+  "dominant_reason": "1 sentence explaining why this domain dominates (under 50 words)",
+  "signatures": [
+    {"label":"Signature name (under 5 words)","cs":"CS theme evidence (under 30 words)","f5":"Facet5 factor evidence (under 30 words)"},
+    {"label":"...","cs":"...","f5":"..."},
+    {"label":"...","cs":"...","f5":"..."}
+  ],
+  "tensions": [
+    {"title":"Tension point title (under 5 words)","desc":"Hypothesis sentence (under 40 words)"},
+    {"title":"...","desc":"..."}
+  ],
+  "best_context": "2 work contexts where this person shines, comma-separated (under 40 words)",
+  "debrief_questions": [
+    "Exploration question 1 (under 20 words)",
+    "Exploration question 2 (under 20 words)",
+    "Exploration question 3 (under 20 words)"
   ]
 }`;
 

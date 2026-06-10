@@ -13,14 +13,15 @@
 <!-- ─── HEADER ─── -->
 <header>
   <div class="header-inner">
-    <div class="logo">Strengths × Facet5</div>
+    <button class="logo-btn" onclick="goPage(0)">Strengths × Facet5</button>
     <div class="prog-wrap" id="prog_wrap" style="display:none">
-      <div class="prog-step" id="ps1">1 기본 정보</div>
+      <div class="prog-step" id="ps1" data-i18n="step1">1 기본 정보</div>
       <div class="prog-sep">›</div>
-      <div class="prog-step" id="ps2">2 진단 입력</div>
+      <div class="prog-step" id="ps2" data-i18n="step2">2 진단 입력</div>
       <div class="prog-sep">›</div>
-      <div class="prog-step" id="ps3">3 분석 결과</div>
+      <div class="prog-step" id="ps3" data-i18n="step3">3 분석 결과</div>
     </div>
+    <button class="lang-btn" id="lang_btn" onclick="toggleLang()">English</button>
   </div>
 </header>
 
@@ -28,10 +29,10 @@
 <div class="page active" id="pg0">
   <div class="hero">
     <div class="eyebrow">FACILITATOR'S DESK</div>
-    <h1>강점 × Facet5<br>통합 프로파일 도구</h1>
-    <p class="hero-sub">CliftonStrengths와 Facet5 두 진단을 교차 분석해<br>퍼실리테이터용 하이라이트 카드와 상세 PDF 리포트를 생성합니다.</p>
-    <button class="btn-primary big" onclick="goPage(2)">시작하기 →</button>
-    <p class="note">진단 데이터는 서버에 저장되지 않습니다.</p>
+    <h1 data-i18n="heroTitle">강점 × Facet5<br>통합 프로파일 도구</h1>
+    <p class="hero-sub" data-i18n="heroSub">CliftonStrengths와 Facet5 두 진단을 교차 분석해<br>퍼실리테이터용 하이라이트 카드와 상세 PDF 리포트를 생성합니다.</p>
+    <button class="btn-primary big" onclick="goPage(2)" data-i18n="start">시작하기 →</button>
+    <p class="note" data-i18n="noStore">진단 데이터는 서버에 저장되지 않습니다.</p>
   </div>
 </div>
 
@@ -40,21 +41,21 @@
   <div class="container">
     <div class="step-header">
       <div class="eyebrow">STEP 1</div>
-      <h2>대상자 기본 정보</h2>
+      <h2 data-i18n="step1Title">대상자 기본 정보</h2>
     </div>
     <div class="card">
       <div class="field-grid">
         <div class="field">
-          <label>이름 또는 이니셜 <span class="req">*</span></label>
-          <input type="text" id="p_name" placeholder="예: Sang-Wook K.">
+          <label><span data-i18n="nameLabel">이름 또는 이니셜</span> <span class="req">*</span></label>
+          <input type="text" id="p_name" data-i18n-ph="namePh" placeholder="예: Sang-Wook K.">
         </div>
         <div class="field">
-          <label>역할 / 직무</label>
-          <input type="text" id="p_role" placeholder="예: HRBP · 팀장">
+          <label data-i18n="roleLabel">역할 / 직무</label>
+          <input type="text" id="p_role" data-i18n-ph="rolePh" placeholder="예: HRBP · 팀장">
         </div>
       </div>
       <div class="field" style="margin-top:12px">
-        <label>세션 목적</label>
+        <label data-i18n="purposeLabel">세션 목적</label>
         <select id="p_purpose">
           <option>개인 디브리핑</option>
           <option>리더십 코칭</option>
@@ -64,7 +65,7 @@
       </div>
     </div>
     <div class="err" id="err1"></div>
-    <button class="btn-primary" onclick="step1Next()">다음 — 진단 입력 →</button>
+    <button class="btn-primary" onclick="step1Next()" data-i18n="step1Next">다음 — 진단 입력 →</button>
   </div>
 </div>
 
@@ -73,16 +74,16 @@
   <div class="container">
     <div class="step-header">
       <div class="eyebrow">STEP 2</div>
-      <h2>진단 데이터 입력</h2>
+      <h2 data-i18n="step2Title">진단 데이터 입력</h2>
     </div>
 
     <!-- 탭 선택 -->
     <div class="tab-row">
       <button class="tab active" id="tab_manual" onclick="switchTab('manual')">
-        <span class="tab-icon">✦</span> 직접 입력 (슬라이드 선택)
+        <span class="tab-icon">✦</span> <span data-i18n="tabManual">직접 입력 (슬라이드 선택)</span>
       </button>
       <button class="tab" id="tab_upload" onclick="switchTab('upload')">
-        <span class="tab-icon">↑</span> 파일 업로드 (PDF/이미지)
+        <span class="tab-icon">↑</span> <span data-i18n="tabUpload">파일 업로드 (PDF/이미지)</span>
       </button>
     </div>
 
@@ -91,7 +92,7 @@
       <!-- CS 섹션 -->
       <div class="card" style="margin-bottom:12px">
         <div class="card-header">
-          <span class="card-title">CliftonStrengths Top 5–10</span>
+          <span class="card-title" data-i18n="csTitle">CliftonStrengths Top 5–10</span>
           <span id="cs_cnt" class="cnt">0 / 10</span>
         </div>
         <div id="cs_chips" class="chips-row"></div>
@@ -100,10 +101,10 @@
 
       <!-- Facet5 섹션 -->
       <div class="card">
-        <div class="card-title" style="margin-bottom:12px">Facet5 스텐 점수 (1–10, 평균 5.5)</div>
+        <div class="card-title" style="margin-bottom:12px" data-i18n="f5Title">Facet5 스텐 점수 (1–10, 평균 5.5)</div>
         <div id="f5_main"></div>
         <details>
-          <summary class="sub-summary">하위 요인 상세 입력 (선택 — PDF 품질 향상)</summary>
+          <summary class="sub-summary" data-i18n="subSummary">하위 요인 상세 입력 (선택 — PDF 품질 향상)</summary>
           <div id="f5_sub" style="margin-top:10px"></div>
         </details>
         <div class="fam-box" id="fam_box"></div>
@@ -113,44 +114,44 @@
     <!-- 파일 업로드 패널 -->
     <div id="panel_upload" style="display:none">
       <div class="card">
-        <div class="card-title" style="margin-bottom:4px">리포트 파일 업로드</div>
-        <p class="hint">CliftonStrengths 리포트와 Facet5 리포트 PDF 또는 이미지를 올려주세요.<br>파일에서 점수와 테마를 자동으로 추출합니다.</p>
+        <div class="card-title" style="margin-bottom:4px" data-i18n="uploadTitle">리포트 파일 업로드</div>
+        <p class="hint" data-i18n="uploadHint">CliftonStrengths 리포트와 Facet5 리포트 PDF 또는 이미지를 올려주세요.<br>파일에서 점수와 테마를 자동으로 추출합니다.</p>
 
         <div class="drop-zone" id="drop_cs" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropFile(event,'cs')">
           <input type="file" id="file_cs" accept=".pdf,.png,.jpg,.jpeg" style="display:none" onchange="fileSelect(event,'cs')">
           <div class="drop-icon">📄</div>
-          <div class="drop-label">CliftonStrengths 리포트</div>
-          <div class="drop-hint">PDF 또는 이미지 드래그 · 클릭하여 선택</div>
+          <div class="drop-label" data-i18n="csReportLabel">CliftonStrengths 리포트</div>
+          <div class="drop-hint" data-i18n="dropHint">PDF 또는 이미지 드래그 · 클릭하여 선택</div>
           <div class="drop-status" id="ds_cs"></div>
-          <button class="btn-outline small" onclick="document.getElementById('file_cs').click()">파일 선택</button>
+          <button class="btn-outline small" onclick="document.getElementById('file_cs').click()" data-i18n="selectFile">파일 선택</button>
         </div>
 
         <div class="drop-zone" id="drop_f5" style="margin-top:10px" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropFile(event,'f5')">
           <input type="file" id="file_f5" accept=".pdf,.png,.jpg,.jpeg" style="display:none" onchange="fileSelect(event,'f5')">
           <div class="drop-icon">📊</div>
-          <div class="drop-label">Facet5 리포트</div>
-          <div class="drop-hint">PDF 또는 이미지 드래그 · 클릭하여 선택</div>
+          <div class="drop-label" data-i18n="f5ReportLabel">Facet5 리포트</div>
+          <div class="drop-hint" data-i18n="dropHint">PDF 또는 이미지 드래그 · 클릭하여 선택</div>
           <div class="drop-status" id="ds_f5"></div>
-          <button class="btn-outline small" onclick="document.getElementById('file_f5').click()">파일 선택</button>
+          <button class="btn-outline small" onclick="document.getElementById('file_f5').click()" data-i18n="selectFile">파일 선택</button>
         </div>
 
-        <button class="btn-primary" style="margin-top:14px;width:100%" id="parse_btn" onclick="parseFiles()" disabled>파일에서 점수 추출하기</button>
+        <button class="btn-primary" style="margin-top:14px;width:100%" id="parse_btn" onclick="parseFiles()" disabled data-i18n="parseBtn">파일에서 점수 추출하기</button>
         <div class="err" id="parse_err"></div>
 
         <!-- 추출 후 확인 영역 -->
         <div id="extracted_preview" style="display:none;margin-top:14px">
-          <div class="extracted-title">추출된 데이터 확인</div>
+          <div class="extracted-title" data-i18n="extractedTitle">추출된 데이터 확인</div>
           <div id="extracted_cs" class="extracted-block"></div>
           <div id="extracted_f5" class="extracted-block" style="margin-top:8px"></div>
-          <p class="hint" style="margin-top:6px">추출 결과가 정확한지 확인 후 분석하세요. 수정이 필요하면 직접 입력 탭으로 전환하세요.</p>
+          <p class="hint" style="margin-top:6px" data-i18n="extractedHint">추출 결과가 정확한지 확인 후 분석하세요. 수정이 필요하면 직접 입력 탭으로 전환하세요.</p>
         </div>
       </div>
     </div>
 
     <div class="err" id="err2"></div>
     <div class="btn-row">
-      <button class="btn-outline" onclick="goPage(2)">← 이전</button>
-      <button class="btn-primary" id="analyze_btn" onclick="runAnalysis()">분석 시작 →</button>
+      <button class="btn-outline" onclick="goPage(2)" data-i18n="prevBtn">← 이전</button>
+      <button class="btn-primary" id="analyze_btn" onclick="runAnalysis()" data-i18n="analyzeBtn">분석 시작 →</button>
     </div>
   </div>
 </div>
@@ -160,10 +161,10 @@
   <div class="container">
     <div id="result_area"></div>
     <div class="btn-row" style="margin-top:16px">
-      <button class="btn-outline" onclick="goPage(3)">← 입력 수정</button>
-      <button class="btn-primary" id="pdf_btn" onclick="openPdf()">상세 PDF 리포트 열기 ↗</button>
+      <button class="btn-outline" onclick="goPage(3)" data-i18n="editBtn">← 입력 수정</button>
+      <button class="btn-primary" id="pdf_btn" onclick="openPdf()" data-i18n="pdfBtn">상세 PDF 리포트 열기 ↗</button>
     </div>
-    <p class="note" style="text-align:center;margin-top:8px">PDF 창에서 인쇄(Ctrl+P) → PDF로 저장 선택</p>
+    <p class="note" style="text-align:center;margin-top:8px" data-i18n="pdfNote">PDF 창에서 인쇄(Ctrl+P) → PDF로 저장 선택</p>
   </div>
 </div>
 
