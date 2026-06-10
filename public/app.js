@@ -474,7 +474,7 @@ function buildF5Sliders() {
   });
 }
 
-restoreSession(); buildThemeGrid();
+buildThemeGrid();
 buildF5Sliders();
 updateCS();
 renderFamily();
@@ -500,3 +500,5 @@ function restoreSession() {
     goPage(4);
   }
 }
+
+restoreSession();
