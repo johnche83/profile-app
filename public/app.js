@@ -87,7 +87,7 @@ function step1Next() {
   const name = document.getElementById("p_name").value.trim();
   if(!name){ document.getElementById("err1").textContent="이름을 입력해주세요."; return; }
   document.getElementById("err1").textContent="";
-  goPage(2);
+  goPage(3);
 }
 
 /* ── 탭 전환 ── */
@@ -291,7 +291,7 @@ async function runAnalysis() {
     const pd = await pr.json();
     if(pd.ok) lastPdfHtml = pd.html;
 
-    goPage(3);
+    goPage(4);
   } catch(e) {
     document.getElementById("err2").textContent = "오류: " + e.message;
   } finally { hideLoading(); }
