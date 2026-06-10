@@ -71,10 +71,10 @@ ${subfStr?"하위요인: "+subfStr:""}
   "debrief_questions": ["질문1(30자이내)","질문2","질문3"],
   "highlight_narrative": "두 진단 통합 서술 2~3문장 (200자 이내)",
   "cs_domain_narratives": {
-    "executing": "실행력 테마 작동 방식 3~4문장, 테마명 구체적 언급. 해당 테마 없으면 null",
-    "influencing": "영향력 테마 작동 방식 3~4문장. 해당 테마 없으면 null",
-    "relationship": "대인관계 테마 작동 방식 3~4문장. 해당 테마 없으면 null",
-    "strategic": "전략적 사고 테마 작동 방식 3~4문장. 해당 테마 없으면 null"
+    "executing": "실행력 테마 작동 방식 2문장(100자), 테마명 언급. 테마 없으면 null",
+    "influencing": "영향력 테마 작동 방식 2문장(100자). 테마 없으면 null",
+    "relationship": "대인관계 테마 작동 방식 2문장(100자). 테마 없으면 null",
+    "strategic": "전략적 사고 테마 작동 방식 2문장(100자). 테마 없으면 null"
   },
   "theme_dynamics": [
     {"combo":"테마A × 테마B","hypothesis":"두 테마 상호작용 발현 가설 1~2문장"},
@@ -94,36 +94,36 @@ ${subfStr?"하위요인: "+subfStr:""}
     {"title":"...","desc":"..."}
   ],
   "f5_factor_analysis": {
-    "W": "의지(Will ${sten.W}) 해석: 점수 맥락화, 하위 요인 낙차 분석, 행동 패턴, CS와 연결 (150자 이내)",
-    "E": "활력(Energy ${sten.E}) 해석: 에너지 원천과 방식, CS와 연결 (150자 이내)",
-    "A": "친화성(Affection ${sten.A}) 해석: 관계 방식, CS와 연결 (150자 이내)",
-    "C": "통제력(Control ${sten.C}) 해석: 구조화 성향, CS와 연결 (150자 이내)",
-    "Em": "정서(Emotionality ${sten.Em}) 해석: 정서 처리 방식, CS와 연결 (150자 이내)"
+    "W": "의지 ${sten.W} 해석: 점수+행동패턴+CS연결 (80자)",
+    "E": "활력 ${sten.E} 해석: 에너지원천+CS연결 (80자)",
+    "A": "친화성 ${sten.A} 해석: 관계방식+CS연결 (80자)",
+    "C": "통제력 ${sten.C} 해석: 구조화성향+CS연결 (80자)",
+    "Em": "정서 ${sten.Em} 해석: 정서처리+CS연결 (80자)"
   },
   "convergence_signals": [
-    {"title":"수렴 특성 이름","cs_evidence":"CS 테마 근거 1~2문장","f5_evidence":"Facet5 요인 근거 1~2문장"},
+    {"title":"수렴 특성명(10자)","cs_evidence":"CS 근거(50자)","f5_evidence":"F5 근거(50자)"},
     {"title":"...","cs_evidence":"...","f5_evidence":"..."},
     {"title":"...","cs_evidence":"...","f5_evidence":"..."},
     {"title":"...","cs_evidence":"...","f5_evidence":"..."},
     {"title":"...","cs_evidence":"...","f5_evidence":"..."}
   ],
-  "facilitator_note_convergence": "수렴 신호 활용 퍼실리테이터 노트 2~3문장",
+  "facilitator_note_convergence": "퍼실리테이터 노트 1~2문장(80자)",
   "tension_points_detailed": [
-    {"title":"긴장 N — 제목","desc":"상세 서술 + 발현 가설 2~3문장","verify_q":"이 긴장을 탐색하는 검증 질문 1개"},
+    {"title":"긴장 N — 제목(15자)","desc":"가설 2문장(100자)","verify_q":"검증 질문(40자)"},
     {"title":"...","desc":"...","verify_q":"..."},
     {"title":"...","desc":"...","verify_q":"..."},
     {"title":"...","desc":"...","verify_q":"..."}
   ],
   "operating_model": {
-    "name": "작동 모델 이름 (예: 맥락 기반 설계자)",
-    "narrative": "두 진단 통합 작동 방식 2~3문장",
-    "best_scenes": ["빛나는 장면1","빛나는 장면2","빛나는 장면3","빛나는 장면4"],
-    "energizers": ["에너지 조건1","에너지 조건2","에너지 조건3","에너지 조건4","에너지 조건5"],
-    "drainers": ["디모티베이터1","디모티베이터2","디모티베이터3","디모티베이터4","디모티베이터5"],
-    "partner_note": "보완 파트너십 제안 2~3문장"
+    "name": "작동 모델 이름(10자이내)",
+    "narrative": "작동 방식 2문장(100자)",
+    "best_scenes": ["장면1(25자)","장면2","장면3","장면4"],
+    "energizers": ["조건1(20자)","조건2","조건3","조건4","조건5"],
+    "drainers": ["소진1(20자)","소진2","소진3","소진4","소진5"],
+    "partner_note": "파트너십 제안 1~2문장(80자)"
   },
   "debrief_questions_detailed": [
-    {"q":"탐색 질문 (근거 테마/점수 명시)","context":"(근거)"},
+    {"q":"탐색 질문(40자, 테마/점수 명시)","context":"근거(20자)"},
     {"q":"...","context":"..."},
     {"q":"...","context":"..."},
     {"q":"...","context":"..."},
@@ -131,13 +131,13 @@ ${subfStr?"하위요인: "+subfStr:""}
     {"q":"...","context":"..."}
   ],
   "session_flow": [
-    {"phase":"오프닝","duration":"15분","content":"세션 오프닝 내용"},
-    {"phase":"탐색","duration":"35분","content":"탐색 단계 내용"},
-    {"phase":"통합","duration":"25분","content":"통합 단계 내용"},
-    {"phase":"액션","duration":"15분","content":"액션 플랜 단계 내용"}
+    {"phase":"오프닝","duration":"15분","content":"내용(40자)"},
+    {"phase":"탐색","duration":"35분","content":"내용(40자)"},
+    {"phase":"통합","duration":"25분","content":"내용(40자)"},
+    {"phase":"액션","duration":"15분","content":"내용(40자)"}
   ],
   "development_experiments": [
-    {"title":"실험명","desc":"구체적 실험 방법 2~3문장"},
+    {"title":"실험명(15자)","desc":"실험 방법 2문장(100자)"},
     {"title":"...","desc":"..."},
     {"title":"...","desc":"..."}
   ]
@@ -254,7 +254,7 @@ Sten interpretation: 1~3=very low, 4=low, 5~6=average, 7=high, 8~10=very high. M
       },
       body: JSON.stringify({
         model: "claude-sonnet-4-5",
-        max_tokens: 6000,
+        max_tokens: 8000,
         messages: [{ role: "user", content: isKo ? promptKo : promptEn }]
       })
     });
