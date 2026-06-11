@@ -216,7 +216,7 @@ body{font-family:'Noto Sans KR',sans-serif;color:#222;font-size:10pt;line-height
   @page{size:A4;margin:14mm 13mm 16mm}
   .no-print{display:none!important}
   .page-break{page-break-before:always}
-  body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;color-adjust:exact!important}
 }
 .wrap{max-width:780px;margin:0 auto;padding:20px 24px}
 h2{font-size:13.5pt;font-weight:900;color:#1B2733;border-bottom:2.5px solid #1B2733;padding-bottom:5px;margin:0 0 12px}
