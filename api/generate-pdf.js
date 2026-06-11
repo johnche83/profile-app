@@ -53,10 +53,9 @@ export default async function handler(req, res) {
 
   const barHtml = (val, color) => {
     const pct = Math.round(parseFloat(val)*10);
-    return `<div style="position:relative;height:8px;background:#EDF0F3;border-radius:4px;margin:2px 0 1px">
-      <div style="position:absolute;left:50%;top:-3px;width:1px;height:14px;background:#C5C9CF"></div>
-      <div style="position:absolute;left:0;top:0;height:8px;width:${pct}%;background:${color}40;border-radius:4px"></div>
-      <div style="position:absolute;left:calc(${pct}% - 7px);top:-3px;width:14px;height:14px;border-radius:50%;background:${color};border:2.5px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.2)"></div>
+    return `<div style="-webkit-print-color-adjust:exact;print-color-adjust:exact;position:relative;height:10px;background:linear-gradient(to right,${color}55 ${pct}%,#E8EBE8 ${pct}%);border-radius:5px;margin:3px 0 2px">
+      <div style="position:absolute;left:50%;top:-2px;width:1px;height:14px;background:#B8BDB8"></div>
+      <div style="position:absolute;left:calc(${pct}% - 8px);top:-4px;width:16px;height:16px;border-radius:50%;background:${color};border:2.5px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.25)"></div>
     </div>`;
   };
 

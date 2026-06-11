@@ -545,6 +545,7 @@ async function openPdf() {
       #pdf-overlay{position:static!important;overflow:visible!important;background:white!important}
       #pdf-overlay-scroll{overflow:visible!important;padding:0!important}
       #pdf-overlay-body{border-radius:0!important;box-shadow:none!important}
+      *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;color-adjust:exact!important}
       @page{size:A4;margin:15mm 14mm 18mm}
       .page-break{page-break-before:always}
     }
