@@ -38,9 +38,22 @@ export default async function handler(req, res) {
   const cnt = {executing:0,influencing:0,relationship:0,strategic:0};
   top10.forEach(en => { const t = THEMES.find(x => x.en===en); if(t) cnt[t.d]++; });
 
-  const subfStr = substen ? Object.entries(substen).filter(([,v])=>v!==5.5).map(([k,v])=>`${k}:${v}`).join(" ") : "";
+  const SUBFACTOR_NAMES = {
+    W1:{ko:"결의",en:"Determination"}, W2:{ko:"정면대응",en:"Confrontation"}, W3:{ko:"독립심",en:"Independence"},
+    E1:{ko:"생동력",en:"Vitality"},    E2:{ko:"사교성",en:"Sociability"},    E3:{ko:"적응성",en:"Adaptability"},
+    A1:{ko:"이타심",en:"Altruism"},    A2:{ko:"도움",en:"Support"},         A3:{ko:"신뢰",en:"Trust"},
+    C1:{ko:"규율",en:"Discipline"},   C2:{ko:"책임감",en:"Responsibility"},
+    Em1:{ko:"긴장",en:"Tension"},     Em2:{ko:"이해도",en:"Apprehension"}
+  };
 
   const isKo = lang !== "en";
+
+  // subfStr: 코드 대신 이름으로 — e.g. "결의(W1):4.2 사교성(E2):2.9"
+  const subfStr = substen
+    ? Object.entries(substen).filter(([,v])=>v!==5.5)
+        .map(([k,v])=>{const n=SUBFACTOR_NAMES[k]; return `${n?( isKo?n.ko:n.en )+"("+k+")":k}:${v}`;})
+        .join(" ")
+    : "";
 
   const promptKo = `당신은 CliftonStrengths와 Facet5 인증 수퍼바이저입니다. 두 진단 데이터를 교차 분석하여 심층 통합 프로파일 JSON을 작성하세요.
 
@@ -94,11 +107,11 @@ ${subfStr?"하위요인: "+subfStr:""}
     {"title":"...","desc":"..."}
   ],
   "f5_factor_analysis": {
-    "W": "의지 ${sten.W} 해석: 점수+행동패턴+CS연결 (80자)",
-    "E": "활력 ${sten.E} 해석: 에너지원천+CS연결 (80자)",
-    "A": "친화성 ${sten.A} 해석: 관계방식+CS연결 (80자)",
-    "C": "통제력 ${sten.C} 해석: 구조화성향+CS연결 (80자)",
-    "Em": "정서 ${sten.Em} 해석: 정서처리+CS연결 (80자)"
+    "W": "의지(${sten.W}) 해석: 하위요인(결의·정면대응·독립심) 점수 언급 시 반드시 이름 사용, 행동패턴+CS연결 (80자)",
+    "E": "활력(${sten.E}) 해석: 하위요인(생동력·사교성·적응성) 이름 사용, 에너지원천+CS연결 (80자)",
+    "A": "친화성(${sten.A}) 해석: 하위요인(이타심·도움·신뢰) 이름 사용, 관계방식+CS연결 (80자)",
+    "C": "통제력(${sten.C}) 해석: 하위요인(규율·책임감) 이름 사용, 구조화성향+CS연결 (80자)",
+    "Em": "정서(${sten.Em}) 해석: 하위요인(긴장·이해도) 이름 사용, 정서처리+CS연결 (80자)"
   },
   "convergence_signals": [
     {"title":"수렴 특성명(10자)","cs_evidence":"CS 근거(50자)","f5_evidence":"F5 근거(50자)"},
@@ -195,11 +208,11 @@ Sten interpretation: 1~3=very low, 4=low, 5~6=average, 7=high, 8~10=very high. M
     {"title":"...","desc":"..."}
   ],
   "f5_factor_analysis": {
-    "W": "Will (${sten.W}): contextualize score, analyze sub-factor gaps, predict behavioral patterns, connect to CS themes (under 100 words)",
-    "E": "Energy (${sten.E}): energy source and style, connect to CS (under 100 words)",
-    "A": "Affection (${sten.A}): relationship approach, connect to CS (under 100 words)",
-    "C": "Control (${sten.C}): structure tendency, connect to CS (under 100 words)",
-    "Em": "Emotionality (${sten.Em}): emotional processing style, connect to CS (under 100 words)"
+    "W": "Will (${sten.W}): always name sub-factors (Determination·Confrontation·Independence) not codes when referencing them, behavior patterns + CS link (under 80 words)",
+    "E": "Energy (${sten.E}): name sub-factors (Vitality·Sociability·Adaptability), energy source + CS link (under 80 words)",
+    "A": "Affection (${sten.A}): name sub-factors (Altruism·Support·Trust), relationship style + CS link (under 80 words)",
+    "C": "Control (${sten.C}): name sub-factors (Discipline·Responsibility), structure tendency + CS link (under 80 words)",
+    "Em": "Emotionality (${sten.Em}): name sub-factors (Tension·Apprehension), emotional processing + CS link (under 80 words)"
   },
   "convergence_signals": [
     {"title":"Convergence signal name","cs_evidence":"1~2 sentences of CS theme evidence","f5_evidence":"1~2 sentences of Facet5 factor evidence"},
